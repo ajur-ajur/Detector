@@ -1,1 +1,1 @@
-get_age
+# roi_gray = gray[top:top + bottom, left:left + right]

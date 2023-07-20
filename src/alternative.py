@@ -1,5 +1,4 @@
 import os
-import face_recognition
 import sys
 import cv2
 import numpy as np
@@ -11,8 +10,8 @@ age_dir = 'model/agegender.h5'
 emotion_dir = 'model/emotion.h5'
 emotion_model = load_model(emotion_dir)
 age_model = load_model(age_dir)
-emotion_dict = {0: "Angry", 1: "Happy", 2: "Disgust",
-                3: "Surprise", 4: "Sad", 5: "Fear", 6: "Neutral"}
+emotion_dict = {0: "Angry", 1: "Neutral", 2: "Happy",
+                3: "Fearful", 4: "Sad", 5: "Surprised"}
 
 
 def get_age(distr):
@@ -68,8 +67,8 @@ class FaceRecognition:
 
     def encode_faces(self):
         for image in os.listdir('faces'):
-            face_image = face_recognition.load_image_file(f"faces/{image}")
-            face_encoding = face_recognition.face_encodings(face_image)[0]
+            face_image = cv2.load_image_file(f"faces/{image}")
+            face_encoding = cv2.face_encodings(face_image)[0]
 
             self.known_face_encodings.append(face_encoding)
             self.known_face_names.append(image)
@@ -131,7 +130,7 @@ class FaceRecognition:
                               (right + 10, bottom + 10), (0, 0, 255), 2)
                 cv2.putText(frame, name, (left + 6, top - 15),
                             cv2.FONT_HERSHEY_SIMPLEX, 0.5, (36, 255, 12), 1)
-                cv2.putText(frame, "Emosi: {}".format(emo_prediction), (right + 15, top + 20),
+                cv2.putText(frame, "Emosi: {}".format(emotion_dict[maxindex]), (right + 15, top + 20),
                             cv2.FONT_HERSHEY_SIMPLEX, 0.5, (36, 255, 12), 1)
                 cv2.putText(frame, "Gender: {}".format(get_gender(age_prediction[1])), (right + 15, top + 40),
                             cv2.FONT_HERSHEY_SIMPLEX, 0.5, (36, 255, 12), 1)
